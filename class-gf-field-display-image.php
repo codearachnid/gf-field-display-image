@@ -75,11 +75,13 @@ class Simple_GF_Field extends GF_Field {
 			$this->display_image_id,
 		);
 		
-		$input .= sprintf('<input type="button" class="button gf-display-image-upload %s" value="%s" data-fieldid="%s" />', 
-			!empty( $this->display_image_id) ? ' hidden ' : '',
-			_( 'Upload image' ),
-			$id
-		);
+		if( is_admin() ){
+			$input .= sprintf('<input type="button" class="button gf-display-image-upload %s" value="%s" data-fieldid="%s" />', 
+				!empty( $this->display_image_id) ? ' hidden ' : '',
+				_( 'Upload image' ),
+				$id
+			);
+		}
 
 	
 		return sprintf( "<div class='ginput_container ginput_container_%s'>%s</div>", $this->type, $input );
