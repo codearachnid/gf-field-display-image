@@ -1,0 +1,120 @@
+<?php
+
+GFForms::include_addon_framework();
+
+class GFAddonDisplayImage extends GFAddOn {
+
+	protected $_version = '1.0.0.72';
+	protected $_min_gravityforms_version = '2.0';
+
+	protected $_slug = 'gf-field-display-image';
+	protected $_path = 'gf-field-display-image/gf-field-display-image.php';
+	protected $_full_path = __FILE__;
+	protected $_title = 'Gravity Forms Image Choices';
+	protected $_short_title = 'Display Image';
+	protected $_url = 'https://github.com/codearachnid/gf-field-display-image/';
+
+	protected $_supported_field_types = ['radio', 'checkbox', 'survey', 'poll', 'quiz', 'post_custom_field', 'product', 'option'];
+	protected $_supported_input_types = ['radio', 'checkbox'];
+	protected $_standard_merge_tags = ['all_fields', 'pricing_fields']; //'all_quiz_results'
+
+	/**
+	 * Members plugin integration
+	 */
+	protected $_capabilities = array( 'gravityforms_edit_forms', 'gravityforms_edit_settings' );
+
+	/**
+	 * Permissions
+	 */
+	protected $_capabilities_settings_page = 'gravityforms_edit_settings';
+	protected $_capabilities_form_settings = 'gravityforms_edit_forms';
+	protected $_capabilities_uninstall = 'gravityforms_uninstall';
+
+	private static $_instance = null;
+
+	/**
+	 * Get an instance of this class.
+	 *
+	 * @return GFFieldDisplayImage
+	 */
+	public static function get_instance() {
+		if ( self::$_instance == null ) {
+			self::$_instance = new self();
+		}
+
+		return self::$_instance;
+	}
+	
+	public function pre_init() {
+		parent::pre_init();
+	 
+		if ( $this->is_gravityforms_supported() && class_exists( 'GF_Field' ) ) {
+			require_once( 'class-gf-field-display-image.php' );
+		}
+	}
+	
+	public function init_admin() {
+		parent::init_admin();
+	 
+		add_filter( 'gform_tooltips', array( $this, 'tooltips' ) );
+		add_action( 'gform_field_standard_settings', array( $this, 'field_appearance_settings' ), 10, 2 );
+	}
+	
+	public function scripts() {
+		wp_enqueue_media();
+		$scripts = array(
+			array(
+				'handle'  => 'gf_field_display_image',
+				'src'     => $this->get_base_url() . '/gravityforms-field-display-image.js',
+				'version' => $this->_version,
+				'deps'    => array( 'jquery' ),
+				'enqueue' => array(
+					array( 'field_types' => array( 'display_image' ) ),
+				),
+			),
+	
+		);
+	
+		return array_merge( parent::scripts(), $scripts );
+	}
+	
+	public function tooltips( $tooltips ) {
+		$insert_tooltips = array(
+			'display_image_id' => sprintf( '<h6>%s</h6>%s', esc_html__( 'Select Image', 'gf_field_display_image' ), esc_html__( '', 'gf_field_display_image' ) ),
+			'label_setting' => sprintf( '<h6>%s</h6>%s', esc_html__( 'Field Label', 'gf_field_display_image' ), esc_html__('Enter the label for this Image block. It will help you identify your Image blocks in the form editor, but it will not be displayed on the form.', 'gf_field_display_image' )),
+		);
+	 
+		return array_merge( $tooltips, $insert_tooltips );
+	}
+	
+	public function field_appearance_settings( $position, $form_id ) {
+		if ( $position == 10 ) {
+			?>
+			<li class="display_image_id field_setting">
+				<label for="display_image_id">
+					<?php esc_html_e( 'Display Image Settings', 'gf_field_display_image' ); ?>
+					<?php gform_tooltip( 'display_image_id' ) ?>
+				</label>
+				<input id="upload_image_button" type="button" class="button gf-display-image-upload" value="<?php _e( 'Upload image' ); ?>" />
+				<input id="remove_image_button" type="button" class="button gf-display-image-remove hidden" value="<?php _e( 'Remove image' ); ?>" />
+				<select id="display_image_size" class="gf-display-image-size hidden">
+					<option>Image Size</option>
+					<option value="thumbnail">Thumbnail</option>
+					<option value="medium">Medium</option>
+					<option value="full">Full Size</option>
+					<!-- <option value="custom">Custom</option> -->
+				</select>
+			</li>
+	 
+			<?php
+		}
+	}
+
+	public function debug_output($data = '', $background='black', $color='white') {
+		echo '<pre style="padding:20px; background:'.$background.'; color:'.$color.';">';
+		print_r($data);
+		echo '</pre>';
+	}
+
+
+} // end class
