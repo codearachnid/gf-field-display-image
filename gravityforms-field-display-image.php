@@ -31,7 +31,7 @@ Text Domain: gf_field_display_image
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('GFFDI_VERSION', '1.0.3');
+define('GFFDI_VERSION', '1.1.0');
 
 add_action( 'gform_loaded', 'GF_Field_Display_Image_Bootstrap' );
 function GF_Field_Display_Image_Bootstrap() {
@@ -43,7 +43,7 @@ function GF_Field_Display_Image_Bootstrap() {
 	// are we on GF 2.5+
 	//define( 'GFFDI_GF_MIN_2_5', version_compare( GFCommon::$version, '2.5-dev-1', '>=' ) );
 
-	require_once( 'class-gf-addon-display-image.php' );
+	require_once( 'class-addon.php' );
 	GFAddOn::register( 'GFAddonDisplayImage' );
 
 }

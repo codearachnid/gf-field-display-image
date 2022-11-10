@@ -3,75 +3,166 @@
 GFForms::include_addon_framework();
 
 class GFAddonDisplayImage extends GFAddOn {
-
-	protected $_version = '1.0.0.72';
-	protected $_min_gravityforms_version = '2.0';
-
-	protected $_slug = 'gf-field-display-image';
-	protected $_path = 'gf-field-display-image/gf-field-display-image.php';
-	protected $_full_path = __FILE__;
-	protected $_title = 'Gravity Forms Image Choices';
-	protected $_short_title = 'Display Image';
-	protected $_url = 'https://github.com/codearachnid/gf-field-display-image/';
-
-	// protected $_supported_field_types = ['radio', 'checkbox', 'survey', 'poll', 'quiz', 'post_custom_field', 'product', 'option'];
-	// protected $_supported_input_types = ['radio', 'checkbox'];
-	// protected $_standard_merge_tags = ['all_fields', 'pricing_fields']; //'all_quiz_results'
-
+	
 	/**
-	 * Members plugin integration
-	 */
-	protected $_capabilities = array( 'gravityforms_edit_forms', 'gravityforms_edit_settings' );
-
-	/**
-	 * Permissions
-	 */
-	protected $_capabilities_settings_page = 'gravityforms_edit_settings';
-	protected $_capabilities_form_settings = 'gravityforms_edit_forms';
-	protected $_capabilities_uninstall = 'gravityforms_uninstall';
-
-	private static $_instance = null;
-
-	/**
-	 * Get an instance of this class.
+	 * Contains an instance of this class, if available.
 	 *
-	 * @return GFFieldDisplayImage
+	 * @since  1.0
+	 * @access private
+	 * @var    object $_instance If available, contains an instance of this class.
+	 */
+	private static $_instance = null;
+	
+	/**
+	 * Defines the version of the Advanced Post Creation Add-On.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_version Contains the version, defined from advancedpostcreation.php
+	 */
+	protected $_version = GFFDI_VERSION;
+	
+	/**
+	 * Defines the minimum Gravity Forms version required.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_min_gravityforms_version The minimum version required.
+	 */
+	protected $_min_gravityforms_version = '2.4.5';
+	
+	/**
+	 * Defines the plugin slug.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_slug The slug used for this plugin.
+	 */
+	protected $_slug = 'gf-field-display-image';
+	
+	/**
+	 * Defines the main plugin file.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_path The path to the main plugin file, relative to the plugins folder.
+	 */
+	protected $_path = 'gf-field-display-image/gf-field.php';
+	
+	/**
+	 * Defines the full path to this class file.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_full_path The full path.
+	 */
+	protected $_full_path = __FILE__;
+	
+	/**
+	 * Defines the URL where this Add-On can be found.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string The URL of the Add-On.
+	 */
+	protected $_url = 'https://github.com/codearachnid/gf-field-display-image/';
+	
+	/**
+	 * Defines the title of this Add-On.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_title The title of the Add-On.
+	 */
+	protected $_title = 'Gravity Forms Image Display Field';
+	
+	/**
+	 * Defines the short title of the Add-On.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_short_title The short title.
+	 */
+	protected $_short_title = 'Display Image';
+	
+	/**
+	 * Defines if Add-On should use Gravity Forms servers for update data.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    bool
+	 */
+	protected $_enable_rg_autoupgrade = true;
+	
+	/**
+	 * Defines if Add-On should allow users to configure what order feeds are executed in.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    bool
+	 */
+	protected $_supports_feed_ordering = true;
+	
+	/**
+	 * Defines the capability needed to access the Add-On settings page.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_capabilities_settings_page The capability needed to access the Add-On settings page.
+	 */
+	protected $_capabilities_settings_page = '';
+	
+	/**
+	 * Defines the capability needed to access the Add-On form settings page.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_capabilities_form_settings The capability needed to access the Add-On form settings page.
+	 */
+	protected $_capabilities_form_settings = '';
+	
+	/**
+	 * Defines the capability needed to uninstall the Add-On.
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    string $_capabilities_uninstall The capability needed to uninstall the Add-On.
+	 */
+	protected $_capabilities_uninstall = '';
+	
+	/**
+	 * Defines the capabilities needed for the Advanced Post Creation Add-On
+	 *
+	 * @since  1.0
+	 * @access protected
+	 * @var    array $_capabilities The capabilities needed for the Add-On
+	 */
+	protected $_capabilities = ['gravityforms_edit_forms'];
+	
+	/**
+	 * Get instance of this class.
+	 *
+	 * @since  1.0
+	 * @access public
+	 * @static
+	 *
+	 * @return GF_Advanced_Post_Creation
 	 */
 	public static function get_instance() {
-		if ( self::$_instance == null ) {
-			self::$_instance = new self();
-		}
-
-		return self::$_instance;
-	}
 	
-	// public function plugin_page() {
-	// 	echo 'This page appears in the Forms menu';
-	// }
-	// 
-	// public function plugin_settings_fields() {
-	// 	return array(
-	// 		array(
-	// 			'title'  => esc_html__( 'Simple Add-On Settings', 'simpleaddon' ),
-	// 			'fields' => array(
-	// 				array(
-	// 					'name'              => 'mytextbox',
-	// 					'tooltip'           => esc_html__( 'This is the tooltip', 'simpleaddon' ),
-	// 					'label'             => esc_html__( 'This is the label', 'simpleaddon' ),
-	// 					'type'              => 'text',
-	// 					'class'             => 'small',
-	// 					'feedback_callback' => array( $this, 'is_valid_setting' ),
-	// 				)
-	// 			)
-	// 		)
-	// 	);
-	// }
+		if ( null === self::$_instance ) {
+			self::$_instance = new self;
+		}
+	
+		return self::$_instance;
+	
+	}
 	
 	public function pre_init() {
 		parent::pre_init();
 	 
 		if ( $this->is_gravityforms_supported() && class_exists( 'GF_Field' ) ) {
-			require_once( 'class-gf-field-display-image.php' );
+			require_once( 'class-field.php' );
 		}
 	}
 	
