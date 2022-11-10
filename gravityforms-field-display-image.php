@@ -4,7 +4,7 @@ Plugin Name: Gravity Forms Field Image Display
 Plugin URI: 
 Description: Easily add images to display in the form as a field
 Author: Timothy Wood (@codearachnid)
-Version: 1.0.0
+Version: 1.1.0
 Requires at 3.5
 Tested up to: 6.0
 Author URI: https://codearachnid.com
