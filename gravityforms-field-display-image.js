@@ -9,6 +9,7 @@ jQuery(document).bind("gform_load_field_settings", function(event, field, form){
 	if( image_id != '' && image_id > 0 ){
 		jQuery('.gf-display-image-upload').hide();
 		jQuery('.gf-display-image-remove').show();
+		jQuery("#field_" + image_id + " .ginput_container_display_image").removeClass('has-image').addClass('has-placeholder');
 	} 
 	// console.log('gform_load_field_settings',field);
 });
@@ -59,6 +60,7 @@ jQuery(document).ready(function($){
 			// console.log('gf-display-image-upload','selected image', field_id, image_size, attachment.id, attachment);
 			
 			jQuery("#input_" + field_id).attr( 'src', attachment.sizes[image_size].url ).show();
+			jQuery("#field_" + field_id + " .ginput_container_display_image").removeClass('has-placeholder').addClass('has-image'); //.attr( 'src', attachment.sizes[image_size].url ).show();
 			jQuery('.gf-display-image-upload').hide();
 			jQuery('.gf-display-image-remove').show();
 			jQuery('.gf-display-image-size').show();
@@ -88,6 +90,7 @@ jQuery(document).ready(function($){
 		jQuery("#input_" + field_id).removeAttr( 'src' ).data('imgid','').data('imgsize','').hide();
 		jQuery('.gf-display-image-upload').show();
 		jQuery('.gf-display-image-remove').hide();
+		jQuery("#field_" + field_id + " .ginput_container_display_image").removeClass('has-image').addClass('has-placeholder');
 		jQuery('.gf-display-image-size').hide();
 	});
 });

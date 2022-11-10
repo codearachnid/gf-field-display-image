@@ -1,10 +1,23 @@
 <?php
 
-class Simple_GF_Field extends GF_Field {
+class Display_Image_GF_Field extends GF_Field {
 	public $type = 'display_image';
 	
 	public function get_form_editor_field_title() {
 		return esc_attr__( 'Display Image', 'gf_field_display_image' );
+	}
+	
+	/**
+	 * Returns the field's form editor icon.
+	 *
+	 * This could be an icon url or a gform-icon class.
+	 *
+	 * @since 2.5
+	 *
+	 * @return string
+	 */
+	public function get_form_editor_field_icon() {
+		return 'gform-icon--post-image';
 	}
 	
 	/**
@@ -16,6 +29,7 @@ class Simple_GF_Field extends GF_Field {
 		return array(
 			'group' => 'advanced_fields',
 			'text'  => $this->get_form_editor_field_title(),
+			'icon'
 		);
 	}
 	
@@ -43,6 +57,7 @@ class Simple_GF_Field extends GF_Field {
 	public function is_conditional_logic_supported() {
 		return true;
 	}
+
 
 	
 	/**
@@ -76,15 +91,22 @@ class Simple_GF_Field extends GF_Field {
 		);
 		
 		if( is_admin() ){
-			$input .= sprintf('<input type="button" class="button gf-display-image-upload %s" value="%s" data-fieldid="%s" />', 
-				!empty( $this->display_image_id) ? ' hidden ' : '',
-				_( 'Upload image' ),
-				$id
-			);
+			
+			// set up placehold in admin - will be leveraged if no image is set
+			$input .= '<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" preserveAspectRatio="none" class="placeholder__illustration" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M60 60 0 0"></path></svg>';
+			
+			// $input .= sprintf('<input type="button" class="button gf-display-image-upload %s" value="%s" data-fieldid="%s" />', 
+			// 	!empty( $this->display_image_id) ? ' hidden ' : '',
+			// 	_( 'Upload image' ),
+			// 	$id
+			// );
 		}
 
 	
-		return sprintf( "<div class='ginput_container ginput_container_%s'>%s</div>", $this->type, $input );
+		return sprintf( "<div class='ginput_container ginput_container_%s %s'>%s</div>", 
+			$this->type, 
+			empty($image_to_display) ? 'has-placeholder' : 'has-image',
+			$input );
 	}
 	
 	public function get_field_content( $value, $force_frontend_label, $form ) {
@@ -101,4 +123,4 @@ class Simple_GF_Field extends GF_Field {
 	}
 }
 
-GF_Fields::register( new Simple_GF_Field() );
+GF_Fields::register( new Display_Image_GF_Field() );
