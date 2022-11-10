@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Gravity Forms Field Image Display
+Plugin Name: Gravity Forms Image Display Field
 Plugin URI: https://github.com/codearachnid/gravityforms-field-display-image
 Description: Easily add images to display in the form as a field
 Author: Timothy Wood (@codearachnid)
