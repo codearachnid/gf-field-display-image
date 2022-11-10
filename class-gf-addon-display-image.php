@@ -86,7 +86,7 @@ class GFAddonDisplayImage extends GFAddOn {
 		$min = ''; //defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || isset( $_GET['gform_debug'] ) ? '' : '.min';
 		$styles = [[
 			'handle'  => 'gf_field_display_image',
-			'src'     => $this->get_base_url() . "/gravityforms-field-display-image{$min}.css",
+			'src'     => $this->get_base_url() . "/assets/style{$min}.css",
 			'version' => $this->_version,
 			'enqueue' => [[
 				'field_types' => ['display_image'],
@@ -100,7 +100,7 @@ class GFAddonDisplayImage extends GFAddOn {
 		wp_enqueue_media();
 		$scripts = [[
 			'handle'  => 'gf_field_display_image',
-			'src'     => $this->get_base_url() . '/gravityforms-field-display-image.js',
+			'src'     => $this->get_base_url() . '/assets/script.js',
 			'version' => $this->_version,
 			'deps'    => ['jquery'],
 			'enqueue' => [[
