@@ -90,18 +90,13 @@ class Display_Image_GF_Field extends GF_Field {
 			$this->display_image_id,
 		);
 		
+		// set up placehold in admin - will be leveraged if no image is set
 		if( is_admin() ){
 			
-			// set up placehold in admin - will be leveraged if no image is set
+			// use the same generated placeholder as WP Image Block
 			$input .= '<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" preserveAspectRatio="none" class="placeholder__illustration" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M60 60 0 0"></path></svg>';
-			
-			// $input .= sprintf('<input type="button" class="button gf-display-image-upload %s" value="%s" data-fieldid="%s" />', 
-			// 	!empty( $this->display_image_id) ? ' hidden ' : '',
-			// 	_( 'Upload image' ),
-			// 	$id
-			// );
-		}
 
+		}
 	
 		return sprintf( "<div class='ginput_container ginput_container_%s %s'>%s</div>", 
 			$this->type, 

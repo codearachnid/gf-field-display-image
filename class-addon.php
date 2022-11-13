@@ -205,6 +205,7 @@ class GFAddonDisplayImage extends GFAddOn {
 		$insert_tooltips = array(
 			'display_image_id' => sprintf( '<h6>%s</h6>%s', esc_html__( 'Select Image', 'gf_field_display_image' ), esc_html__( '', 'gf_field_display_image' ) ),
 			'label_setting' => sprintf( '<h6>%s</h6>%s', esc_html__( 'Field Label', 'gf_field_display_image' ), esc_html__('Enter the label for this Image block. It will help you identify your Image blocks in the form editor, but it will not be displayed on the form.', 'gf_field_display_image' )),
+			'display_image_alt_text' => sprintf( '<h6>%s</h6>', esc_html__('Alternative Text', 'gf_field_display_image' )),
 		);
 	 
 		return array_merge( $tooltips, $insert_tooltips );
@@ -218,10 +219,21 @@ class GFAddonDisplayImage extends GFAddOn {
 					<?php esc_html_e( 'Upload an image file, pick one from your media library, or add one with a URL.', 'gf_field_display_image' ); ?>
 					<?php gform_tooltip( 'display_image_id' ) ?>
 				</label>
-				<input id="upload_image_button" type="button" class="button components-button gf-display-image-upload is-primary" data-action="upload" value="<?php _e( 'Upload' ); ?>" />
-				<input id="library_image_button" type="button" class="button gf-display-image-upload" data-action="library" value="<?php _e( 'Media Library' ); ?>" />
-				<input id="url_image_button" type="button" class="button gf-display-image-upload" data-action="url" value="<?php _e( 'Insert from URL' ); ?>" />
-				<input id="remove_image_button" type="button" class="button gf-display-image-remove hidden" data-action="remove" value="<?php _e( 'Remove image' ); ?>" />
+				<p>
+				<input id="upload_image_button" type="button" class="button GFFDI_action components-button gf-display-image-add is-primary" data-action="upload" value="<?php _e( 'Upload' ); ?>" />
+				<input id="library_image_button" type="button" class="button GFFDI_action gf-display-image-add" data-action="library" value="<?php _e( 'Media Library' ); ?>" />
+				<input id="url_image_button" type="button" class="button GFFDI_action gf-display-image-add" data-action="url" value="<?php _e( 'Insert from URL' ); ?>" />
+				<input id="remove_image_button" type="button" class="button GFFDI_action gf-display-image-remove hidden" data-action="remove" value="<?php _e( 'Remove image' ); ?>" />
+				</p>
+				<label for="display_image_alt_text">
+					<?php esc_html_e( 'Alt Text', 'gf_field_display_image' ); ?>
+					<?php gform_tooltip( 'display_image_alt_text' ) ?>
+				</label>
+				<textarea name="display_image_alt_text" class="" rows="2" ></textarea>
+				<p><a href="https://www.w3.org/WAI/tutorials/images/decision-tree" target="_blank" rel="external noreferrer noopener">Describe the purpose of the image <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" class="" aria-hidden="true" focusable="false"><path d="M18.2 17c0 .7-.6 1.2-1.2 1.2H7c-.7 0-1.2-.6-1.2-1.2V7c0-.7.6-1.2 1.2-1.2h3.2V4.2H7C5.5 4.2 4.2 5.5 4.2 7v10c0 1.5 1.2 2.8 2.8 2.8h10c1.5 0 2.8-1.2 2.8-2.8v-3.6h-1.5V17zM14.9 3v1.5h3.7l-6.4 6.4 1.1 1.1 6.4-6.4v3.7h1.5V3h-6.3z"></path></svg></a> Leave empty if the image is purely decorative.</p>
+				<label for="display_image_size">
+					<?php esc_html_e( 'Image Size', 'gf_field_display_image' ); ?>
+				</label>
 				<select id="display_image_size" class="gf-display-image-size hidden">
 					<option>Image Size</option>
 					<option value="thumbnail">Thumbnail</option>
