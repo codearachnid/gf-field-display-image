@@ -84,7 +84,6 @@ jQuery(document).ready(function($){
 					if( image_size == 'undefined' || image_size == '' ){
 						image_size = 'full';
 						SetFieldProperty( 'display_image_size', image_size );
-						$('#display_image_alt').show();
 						jQuery('.gf-display-image-size').val( image_size );
 					}
 					
@@ -109,7 +108,7 @@ jQuery(document).ready(function($){
 				break;
 			case 'remove': // clear image
 				SetFieldProperty('display_image_id', '' );
-				$('#display_image_alt').val('').trigger('change').hide();
+				$('#display_image_alt').val('').trigger('change');
 				input_field.removeAttr( 'src' ).data('imgid','').data('imgsize','').hide();				
 				gffdi_toggle_placeholder( false, field_id );
 				break;
@@ -123,17 +122,17 @@ function gffdi_toggle_placeholder( has_image, field_id ){
 	if( has_image ){
 		// console.log('has image');
 		jQuery("#field_" + field_id + " .ginput_container_display_image").addClass('has-image').removeClass('has-placeholder');
-		jQuery('.gf-display-image-size').show();
+		jQuery("#display_image_size,label[for='display_image_size']").show();
 		jQuery('.gf-display-image-remove').show();
-		jQuery('#display_image_alt').show();
-		jQuery('.gf-display-image-add').hide();
+		jQuery("#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt']").show();
+		jQuery(".gf-display-image-add,label[for='display_image_id']").hide();
 	} else {
 		// console.log('has placeholder');
 		jQuery("#field_" + field_id + " .ginput_container_display_image").addClass('has-placeholder').removeClass('has-image');
-		jQuery('.gf-display-image-size').hide();
+		jQuery("#display_image_size,label[for='display_image_size']").hide();
 		jQuery('.gf-display-image-remove').hide();
-		jQuery('#display_image_alt').hide();
-		jQuery('.gf-display-image-add').show();
+		jQuery("#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt']").hide();
+		jQuery(".gf-display-image-add,label[for='display_image_id']").show();
 	}
 	
 }
