@@ -169,8 +169,8 @@ class GFAddonDisplayImage extends GFAddOn {
 	public function init_admin() {
 		parent::init_admin();
 	 
-		add_filter( 'gform_tooltips', array( $this, 'tooltips' ) );
-		add_action( 'gform_field_standard_settings', array( $this, 'field_appearance_settings' ), 10, 2 );
+		add_filter( 'gform_tooltips', [ $this, 'tooltips' ] );
+		add_action( 'gform_field_standard_settings', [ $this, 'field_appearance_settings' ], 10, 2 );
 	}
 	
 	public function styles() {

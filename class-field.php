@@ -76,32 +76,52 @@ class Display_Image_GF_Field extends GF_Field {
 		$is_form_editor  = $this->is_form_editor();
 	
 		// Prepare the value of the input ID attribute.
-		//$field_id = $is_entry_detail || $is_form_editor || $form_id == 0 ? "input_{$id}" : "input_{$form_id}_{$id}";
-		$field_id = "input_{$id}";
+		$field_id = $is_entry_detail || $is_form_editor || $form_id == 0 ? "input_{$id}" : "input_{$form_id}_{$id}";
+		// $field_id = "input_{$id}";
+		$form_id  = ( $is_entry_detail || $is_form_editor ) && empty( $form_id ) ? rgget( 'id' ) : $form_id;
 		
 		$image_size = !empty($this->display_image_size) ? $this->display_image_size : 'full';
 		$image_to_display = wp_get_attachment_image_src( $this->display_image_id, $image_size );
 	
-		$input = sprintf('<img %s id="%s" class="%s" data-imgsize="%s" data-imgid="%s" />',
-			!empty( $image_to_display ) ? 'src="' . $image_to_display[0] . '"' : '',
-			$field_id,
-			!empty( $this->display_image_id) ? '' : ' hidden ',
-			$this->display_image_size,
-			$this->display_image_id,
-		);
 		
-		// set up placehold in admin - will be leveraged if no image is set
-		if( is_admin() ){
-			
+		
+		// set up placeholder in admin - will be leveraged if no image is set
+		if( $is_form_editor ){
 			// use the same generated placeholder as WP Image Block
-			$input .= '<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" preserveAspectRatio="none" class="placeholder__illustration" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M60 60 0 0"></path></svg>';
+			$placeholder = '<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" preserveAspectRatio="none" class="placeholder__illustration" aria-hidden="true" focusable="false"><path vector-effect="non-scaling-stroke" d="M60 60 0 0"></path></svg>';
+			
+			$min = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG || isset( $_GET['gform_debug'] ) ? '' : '.min';
 
+			$load_script = sprintf('<script type="text/javascript">if( typeof GFFDI_VERSION === "undefined" ){jQuery.getScript( "%s", function() { gffdi_first_time_init("%s"); });}</script>',
+				plugins_url( "/assets/script{$min}.js?ver=" . GFFDI_VERSION, __FILE__ ),
+				plugins_url( "/assets/", __FILE__ )
+				);
+			
+			return sprintf('<div class="ginput_container ginput_container_%s %s"><img %s id="%s" class="%s" data-imgsize="%s" data-imgid="%s" />%s%s</div>',
+				$this->type, 
+				empty($image_to_display) ? 'has-placeholder' : 'has-image',
+				!empty( $image_to_display ) ? 'src="' . $image_to_display[0] . '"' : '',
+				$field_id,
+				!empty( $this->display_image_id) ? '' : ' hidden ',
+				$this->display_image_size,
+				$this->display_image_id,
+				$placeholder, 
+				$load_script
+			);
+
+		} else {
+			// return the raw image on the frontend
+			return sprintf('<img %s id="%s" class="%s" data-imgsize="%s" data-imgid="%s" />',
+				!empty( $image_to_display ) ? 'src="' . $image_to_display[0] . '"' : '',
+				$field_id,
+				!empty( $this->display_image_id) ? '' : ' hidden ',
+				$this->display_image_size,
+				$this->display_image_id,
+			);
+			
 		}
 	
-		return sprintf( "<div class='ginput_container ginput_container_%s %s'>%s</div>", 
-			$this->type, 
-			empty($image_to_display) ? 'has-placeholder' : 'has-image',
-			$input );
+		
 	}
 	
 	public function get_field_content( $value, $force_frontend_label, $form ) {

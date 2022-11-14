@@ -1,3 +1,13 @@
+var GFFDI_VERSION = '1.1.0';
+function gffdi_first_time_init( path ){
+	console.log ("GFFDI_VERSION",GFFDI_VERSION);
+	var head = document.getElementsByTagName('head')[0];
+	var style = document.createElement('link');
+	style.href = path+'style.css';
+	style.type = 'text/css';
+	style.rel = 'stylesheet';
+	head.append(style);
+}
 jQuery(document).bind("gform_load_field_settings", function(event, field, form){
 	console.log(field);
 	image_id = field["display_image_id"];
