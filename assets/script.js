@@ -12,11 +12,13 @@ jQuery(document).bind("gform_load_field_settings", function(event, field, form){
 	// console.log(field);
 	image_id = field["display_image_id"];
 	image_size = field["display_image_size"];
+	image_alt = field["display_image_alt"];
 	if( image_size == '' ){
 		jQuery('#display_image_size').val('').hide();
 	} else {
 		jQuery('#display_image_size').val(image_size).show();
 	}
+	jQuery('#display_image_alt').val(image_alt);
 	if( image_id != '' && image_id > 0 ){
 		gffdi_toggle_placeholder( true, field["id"] );
 	} else {
@@ -26,7 +28,15 @@ jQuery(document).bind("gform_load_field_settings", function(event, field, form){
 });
 jQuery(document).ready(function($){
 	
-	$('.gf-display-image-size').change(function( event ){
+	$('#display_image_alt').change(function( event ){
+		const field_id = $('#sidebar_field_label').data('fieldid');
+		const image_id = $('#input_' + field_id ).data('imgid');
+		const field_data = $(this).val();
+		SetFieldProperty( 'display_image_alt', field_data );
+		$('#input_' + field_id ).attr('alt', field_data );
+	});
+	
+	$('#display_image_size').change(function( event ){
 		const field_id = $('#sidebar_field_label').data('fieldid');
 		const image_id = $('#input_' + field_id ).data('imgid');
 		const image_size = $(this).val();
