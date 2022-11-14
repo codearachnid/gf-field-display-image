@@ -30,7 +30,6 @@ jQuery(document).ready(function($){
 	
 	$('#display_image_alt').change(function( event ){
 		const field_id = $('#sidebar_field_label').data('fieldid');
-		const image_id = $('#input_' + field_id ).data('imgid');
 		const field_data = $(this).val();
 		SetFieldProperty( 'display_image_alt', field_data );
 		$('#input_' + field_id ).attr('alt', field_data );
@@ -38,15 +37,16 @@ jQuery(document).ready(function($){
 	
 	$('#display_image_size').change(function( event ){
 		const field_id = $('#sidebar_field_label').data('fieldid');
-		const image_id = $('#input_' + field_id ).data('imgid');
+		const input_field = $('#input_' + field_id );
+		const image_id = input_field.data('imgid');
 		const image_size = $(this).val();
 		wp.media.attachment(image_id).fetch().then(function (data) {
 		  // preloading finished
-		  $("#input_" + field_id).attr( 'src',wp.media.attachment(image_id).attributes.sizes[image_size].url ).show();
+		  input_field.attr( 'src',wp.media.attachment(image_id).attributes.sizes[image_size].url ).show();
 		});
 		
 		SetFieldProperty( 'display_image_size', image_size );
-		$('#input_' + field_id ).data('imgsize', image_size );
+		input_field.data('imgsize', image_size );
 	});
 	
 	// on upload button click
@@ -55,15 +55,15 @@ jQuery(document).ready(function($){
 
 		const button = $(this);
 		const field_id = $('#sidebar_field_label').data('fieldid');
-		const image_id = $('#input_' + field_id ).data('imgid');
-		const field_elem = $('#input_' + field_id );
+		const input_field = $('#input_' + field_id );
+		const image_id = input_field.data('imgid');
 
 		// determine course of action
 		switch( button.data('action') ){
 			case 'upload':
 			case 'library':
 			
-				image_size = field_elem.data('imgsize');
+				image_size = input_field.data('imgsize');
 				
 				const customUploader = wp.media({
 					title: 'Select image', // modal window title
@@ -79,16 +79,17 @@ jQuery(document).ready(function($){
 					SetFieldProperty('display_image_id', attachment.id );
 					
 					
-					field_elem.data('imgid',attachment.id);
+					input_field.data('imgid',attachment.id);
 					
 					if( image_size == 'undefined' || image_size == '' ){
 						image_size = 'full';
 						SetFieldProperty( 'display_image_size', image_size );
+						$('#display_image_alt').show();
 						jQuery('.gf-display-image-size').val( image_size );
 					}
 					
 					
-					field_elem.attr( 'src', attachment.sizes[image_size].url ).show();
+					input_field.attr( 'src', attachment.sizes[image_size].url ).show();
 					gffdi_toggle_placeholder( true, field_id );
 					
 				});
@@ -108,7 +109,8 @@ jQuery(document).ready(function($){
 				break;
 			case 'remove': // clear image
 				SetFieldProperty('display_image_id', '' );
-				field_elem.removeAttr( 'src' ).data('imgid','').data('imgsize','').hide();				
+				$('#display_image_alt').val('').trigger('change').hide();
+				input_field.removeAttr( 'src' ).data('imgid','').data('imgsize','').hide();				
 				gffdi_toggle_placeholder( false, field_id );
 				break;
 		}
@@ -123,12 +125,14 @@ function gffdi_toggle_placeholder( has_image, field_id ){
 		jQuery("#field_" + field_id + " .ginput_container_display_image").addClass('has-image').removeClass('has-placeholder');
 		jQuery('.gf-display-image-size').show();
 		jQuery('.gf-display-image-remove').show();
+		jQuery('#display_image_alt').show();
 		jQuery('.gf-display-image-add').hide();
 	} else {
 		// console.log('has placeholder');
 		jQuery("#field_" + field_id + " .ginput_container_display_image").addClass('has-placeholder').removeClass('has-image');
 		jQuery('.gf-display-image-size').hide();
 		jQuery('.gf-display-image-remove').hide();
+		jQuery('#display_image_alt').hide();
 		jQuery('.gf-display-image-add').show();
 	}
 	
