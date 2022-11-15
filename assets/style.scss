@@ -34,6 +34,22 @@
 	display:none;
 }
 
+#url_image_input_wrapper{
+	display: none;
+	
+	input#url_image_input{
+		width:85%;
+	}
+	button.submit{
+		width: 15%;
+		padding: 0;
+		margin: 0;
+		height: 36px;
+		float: right;
+		background: transparent;
+	}
+}
+
 
 .placeholder__illustration{	box-sizing: content-box;
 position: absolute;

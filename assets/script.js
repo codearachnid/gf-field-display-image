@@ -60,10 +60,19 @@ jQuery(document).ready(function($){
 
 		// determine course of action
 		switch( button.data('action') ){
+			case 'open-url':
+				$('#url_image_input_wrapper').show();
+				break;
+			case 'set-url':
+				console.log("set the url",$("#url_image_input").val());
+				break;
 			case 'upload':
 			case 'library':
 			
 				image_size = input_field.data('imgsize');
+				
+				$('#url_image_input_wrapper').hide();
+				$("#url_image_input").val('');
 				
 				var frame = wp.media({
 					title: 'Select image', // modal window title

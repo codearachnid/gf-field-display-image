@@ -222,8 +222,15 @@ class GFAddonDisplayImage extends GFAddOn {
 				<p>
 				<input id="upload_image_button" type="button" class="button GFFDI_action components-button gf-display-image-add is-primary" data-action="upload" value="<?php _e( 'Upload' ); ?>" />
 				<input id="library_image_button" type="button" class="button GFFDI_action gf-display-image-add" data-action="library" value="<?php _e( 'Media Library' ); ?>" />
-				<input id="url_image_button" type="button" class="button GFFDI_action gf-display-image-add" data-action="url" value="<?php _e( 'Insert from URL' ); ?>" />
-				<div class="components-popover block-editor-url-popover" tabindex="-1" data-projection-id="86" style="position: absolute; opacity: 1; transform: translateY(0em) scale(1) translateZ(0px); transform-origin: 50% 0% 0px; left: 231.148px; top: 439.727px;"><div class="components-popover__content" style="max-height: 403.273px; overflow: auto;"><div class="block-editor-url-popover__input-container"><div class="block-editor-url-popover__row"><input class="block-editor-media-placeholder__url-input-field" type="text" aria-label="URL" placeholder="Paste or type URL" value=""><button type="submit" class="components-button block-editor-media-placeholder__url-input-submit-button has-icon" aria-label="Apply"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M6.734 16.106l2.176-2.38-1.093-1.028-3.846 4.158 3.846 4.157 1.093-1.027-2.176-2.38h2.811c1.125 0 2.25.03 3.374 0 1.428-.001 3.362-.25 4.963-1.277 1.66-1.065 2.868-2.906 2.868-5.859 0-2.479-1.327-4.896-3.65-5.93-1.82-.813-3.044-.8-4.806-.788l-.567.002v1.5c.184 0 .368 0 .553-.002 1.82-.007 2.704-.014 4.21.657 1.854.827 2.76 2.657 2.76 4.561 0 2.472-.973 3.824-2.178 4.596-1.258.807-2.864 1.04-4.163 1.04h-.02c-1.115.03-2.229 0-3.344 0H6.734z"></path></svg></button></div></div></div></div>
+				<input id="url_image_button" type="button" class="button GFFDI_action gf-display-image-add" data-action="open-url" value="<?php _e( 'Insert from URL' ); ?>" />
+				<div id="url_image_input_wrapper" for="url_image_button">
+					<input id="url_image_input" name="url_image_input" class="url_image_input" type="text" aria-label="URL" placeholder="Paste or type URL" value="">
+					<button type="button" class="GFFDI_action components-button submit has-icon" data-action="set-url" aria-label="Apply">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="-2 -2 24 24" width="24" height="24" aria-hidden="true" focusable="false">
+							<path d="M6.734 16.106l2.176-2.38-1.093-1.028-3.846 4.158 3.846 4.157 1.093-1.027-2.176-2.38h2.811c1.125 0 2.25.03 3.374 0 1.428-.001 3.362-.25 4.963-1.277 1.66-1.065 2.868-2.906 2.868-5.859 0-2.479-1.327-4.896-3.65-5.93-1.82-.813-3.044-.8-4.806-.788l-.567.002v1.5c.184 0 .368 0 .553-.002 1.82-.007 2.704-.014 4.21.657 1.854.827 2.76 2.657 2.76 4.561 0 2.472-.973 3.824-2.178 4.596-1.258.807-2.864 1.04-4.163 1.04h-.02c-1.115.03-2.229 0-3.344 0H6.734z"></path>
+						</svg>
+					</button>
+				</div>
 				<input id="remove_image_button" type="button" class="button GFFDI_action gf-display-image-remove hidden" data-action="remove" value="<?php _e( 'Remove image' ); ?>" />
 				</p>
 				<label for="display_image_alt">
