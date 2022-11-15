@@ -1,4 +1,4 @@
-var GFFDI_VERSION = '1.1.0';
+var GFFDI_VERSION = '2.0.0';
 function gffdi_first_time_init( path ){
 	// console.log ("GFFDI_VERSION",GFFDI_VERSION);
 	var head = document.getElementsByTagName('head')[0];

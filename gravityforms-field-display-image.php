@@ -2,12 +2,12 @@
 /*
 Plugin Name: Gravity Forms Image Display Field
 Plugin URI: https://github.com/codearachnid/gravityforms-field-display-image
-Description: Easily add images to display in the form as a field
+Description: Easily add images as fields in your form. Native integration with Gravity Forms and WordPress block style settings. Gives you full control over sizing and styling your images with precision. Upload an image file, pick one from your media library, or add one with a URL to display in the form as a field.
 Author: Timothy Wood (@codearachnid)
-Version: 1.1.0
+Version: 2.0.0
 Requires at least: 4.0
 Requires PHP: 5.6
-Tested up to: 6.0
+Tested up to: 6.1.1
 Author URI: https://codearachnid.com
 License: GPL-2.0+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -31,7 +31,7 @@ Text Domain: gf_field_display_image
 	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('GFFDI_VERSION', '1.1.0');
+define('GFFDI_VERSION', '2.0.0');
 
 add_action( 'gform_loaded', 'GF_Field_Display_Image_Bootstrap' );
 function GF_Field_Display_Image_Bootstrap() {
