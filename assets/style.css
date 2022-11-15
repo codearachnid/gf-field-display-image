@@ -49,6 +49,13 @@
   background: transparent;
 }
 
+#display_image_size_custom {
+  display: none;
+}
+#display_image_size_custom input {
+  width: 50px;
+}
+
 .placeholder__illustration {
   box-sizing: content-box;
   position: absolute;

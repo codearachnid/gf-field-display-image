@@ -211,6 +211,38 @@ class GFAddonDisplayImage extends GFAddOn {
 		return array_merge( $tooltips, $insert_tooltips );
 	}
 	
+	public function get_image_sizes($size = '' ) {
+		$wp_additional_image_sizes = wp_get_additional_image_sizes();
+	
+		$sizes = array();
+		$get_intermediate_image_sizes = get_intermediate_image_sizes();
+	
+		// Create the full array with sizes and crop info
+		foreach( $get_intermediate_image_sizes as $_size ) {
+			if ( in_array( $_size, array( 'thumbnail', 'medium', 'large' ) ) ) {
+				$sizes[ $_size ]['width'] = get_option( $_size . '_size_w' );
+				$sizes[ $_size ]['height'] = get_option( $_size . '_size_h' );
+				$sizes[ $_size ]['crop'] = (bool) get_option( $_size . '_crop' );
+			} elseif ( isset( $wp_additional_image_sizes[ $_size ] ) ) {
+				$sizes[ $_size ] = array( 
+					'width' => $wp_additional_image_sizes[ $_size ]['width'],
+					'height' => $wp_additional_image_sizes[ $_size ]['height'],
+					'crop' =>  $wp_additional_image_sizes[ $_size ]['crop']
+				);
+			}
+		}
+	
+		// Get only 1 size if found
+		if ( $size ) {
+			if( isset( $sizes[ $size ] ) ) {
+				return $sizes[ $size ];
+			} else {
+				return false;
+			}
+		}
+		return $sizes;
+	}
+	
 	public function field_appearance_settings( $position, $form_id ) {
 		if ( $position == 10 ) {
 			?>
@@ -242,13 +274,19 @@ class GFAddonDisplayImage extends GFAddOn {
 				<label for="display_image_size">
 					<?php esc_html_e( 'Image Size', 'gf_field_display_image' ); ?>
 				</label>
-				<select id="display_image_size" class="gf-display-image-size hidden">
+				<select id="display_image_size" name="display_image_size" class="gf-display-image-size hidden">
 					<option>Image Size</option>
 					<option value="thumbnail">Thumbnail</option>
 					<option value="medium">Medium</option>
 					<option value="full">Full Size</option>
-					<!-- <option value="custom">Custom</option> -->
+					<option value="custom">Custom</option>
 				</select>
+				<p id="display_image_size_custom" >
+					<label for="display_image_size_c_width">Width</label>
+					<input id="display_image_size_c_width" name="display_image_size_c_width" data-type="width" />
+					<label for="display_image_size_c_height">Height</label>
+					<input id="display_image_size_c_height" name="display_image_size_c_height" data-type="height" />
+				</p>
 			</li>
 	 
 			<?php

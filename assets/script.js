@@ -50,11 +50,12 @@ jQuery(document).ready(function($){
 		  	// preloading finished
 		  	input_field.attr( 'src',wp.media.attachment(image_id).attributes.sizes[image_size].url ).show();
 			});
-		} else { // if( image_size != "full" ){
+		} else if( image_size != "custom" ){
 			const image_ratio = {
 				"thumbnail": "150",
 				"medium": "300",
 				"large": "1024",
+				"custom": "auto",
 				"full": "auto" // do not set
 			}
 			if( input_field.height() == input_field.width() ){
@@ -72,6 +73,23 @@ jQuery(document).ready(function($){
 		
 		SetFieldProperty( 'display_image_size', image_size );
 		input_field.data('imgsize', image_size );
+		
+		if( image_size == 'custom' ){
+			$('#display_image_size_custom').show();
+		} else {
+			$('#display_image_size_custom').hide();
+		}
+	});
+	
+	$("#display_image_size_c_width,#display_image_size_c_height").change(function( event ){
+		console.log('changing dimensions', $(this).val(), $(this).data('type') );
+		const field_id = $('#sidebar_field_label').data('fieldid');
+		const input_field = $('#input_' + field_id );
+		if( $(this).data('type') == 'width' ){
+			input_field.attr('width',$(this).val()).attr('height', $("#display_image_size_c_height").val());
+		} else if( $(this).data('type') == 'height') {
+			input_field.attr('width',$("#display_image_size_c_width").val()).attr('height', $(this).val());
+		}
 	});
 	
 	// on upload button click
@@ -94,7 +112,12 @@ jQuery(document).ready(function($){
 				// TODO add image sideload to media library
 				// https://stackoverflow.com/questions/26451022/upload-media-file-from-external-url-to-wordpress-media-library
 				SetFieldProperty('display_image_url', image_url );
-				input_field.attr( 'src', image_url ).show();
+				input_field.attr( 'src', image_url ).show()
+				if( image_url == '') {
+					$('#display_image_size').val('').prop('disabled', false).trigger('change');
+				} else {
+					$('#display_image_size').val('custom').prop('disabled', 'disabled').trigger('change');
+				}
 				gffdi_toggle_placeholder( true, field_id );
 				break;
 			case 'upload':
@@ -103,6 +126,8 @@ jQuery(document).ready(function($){
 				image_size = input_field.data('imgsize');
 				
 				$('#url_image_input_wrapper').hide();
+				$('#display_image_size').val('').prop('disabled', false).trigger('change');
+				$('#display_image_size_custom').hide();
 				
 				var frame = wp.media({
 					title: 'Select image', // modal window title
@@ -176,7 +201,7 @@ function gffdi_toggle_placeholder( has_image, field_id ){
 	} else {
 		// console.log('has placeholder');
 		jQuery("#field_" + field_id + " .ginput_container_display_image").addClass('has-placeholder').removeClass('has-image');
-		jQuery("#display_image_size,label[for='display_image_size'],.gf-display-image-remove,#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt']").hide();
+		jQuery("#display_image_size,label[for='display_image_size'],.gf-display-image-remove,#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt'],#display_image_size_custom").hide();
 		jQuery(".gf-display-image-add,label[for='display_image_id']").show();
 	}
 	jQuery("#url_image_input_wrapper").hide();
