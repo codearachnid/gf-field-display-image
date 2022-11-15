@@ -46,4 +46,24 @@
   stroke-dasharray: 3;
 }
 
+.wp-core-ui .button.is-primary {
+  white-space: nowrap;
+  background: #007cba !important;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: none;
+  outline: 1px solid transparent;
+}
+.wp-core-ui .button.is-primary:hover {
+  color: #fff;
+  background: #005783 !important;
+}
+
+#url_image_button {
+  border: none;
+  margin: none;
+  width: auto;
+  padding: 0 5px;
+}
+
 /*# sourceMappingURL=style.css.map */

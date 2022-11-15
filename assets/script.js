@@ -65,7 +65,7 @@ jQuery(document).ready(function($){
 			
 				image_size = input_field.data('imgsize');
 				
-				const customUploader = wp.media({
+				var frame = wp.media({
 					title: 'Select image', // modal window title
 					library : {
 						type : 'image'
@@ -74,8 +74,15 @@ jQuery(document).ready(function($){
 						text: 'Use this image' // button label text
 					},
 					multiple: false
-				}).on( 'select', function() { // it also has "open" and "close" events
-					const attachment = customUploader.state().get( 'selection' ).first().toJSON();
+				});
+				// frame.on('ready',function(e){
+				// 	if( button.data('action') == 'upload' && e == 'ready'){
+				// 		$('.media-router #menu-item-upload').trigger('click');
+				// 	} else if( button.data('action') == 'library' && e == 'ready'){
+				// 		$('.media-router #menu-item-browse').trigger('click');
+				// 	}
+				frame.on( 'select', function() { // it also has "open" and "close" events
+					const attachment = frame.state().get( 'selection' ).first().toJSON();
 					SetFieldProperty('display_image_id', attachment.id );
 					
 					
@@ -84,7 +91,7 @@ jQuery(document).ready(function($){
 					if( image_size == 'undefined' || image_size == '' ){
 						image_size = 'full';
 						SetFieldProperty( 'display_image_size', image_size );
-						jQuery('.gf-display-image-size').val( image_size );
+						jQuery('#display_image_size').val( image_size );
 					}
 					
 					
@@ -94,9 +101,9 @@ jQuery(document).ready(function($){
 				});
 				
 				// already selected images
-				customUploader.on( 'open', function() {
+				frame.on( 'open', function() {
 					if( image_id ) {
-				  	const selection = customUploader.state().get( 'selection' )
+				  	const selection = frame.state().get( 'selection' )
 				  	attachment = wp.media.attachment( image_id );
 				  	attachment.fetch();
 				  	selection.add( attachment ? [attachment] : [] );
@@ -104,7 +111,7 @@ jQuery(document).ready(function($){
 					
 				});
 				
-				customUploader.open();
+				frame.open();
 				break;
 			case 'remove': // clear image
 				SetFieldProperty('display_image_id', '' );
@@ -122,16 +129,12 @@ function gffdi_toggle_placeholder( has_image, field_id ){
 	if( has_image ){
 		// console.log('has image');
 		jQuery("#field_" + field_id + " .ginput_container_display_image").addClass('has-image').removeClass('has-placeholder');
-		jQuery("#display_image_size,label[for='display_image_size']").show();
-		jQuery('.gf-display-image-remove').show();
-		jQuery("#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt']").show();
+		jQuery("#display_image_size,label[for='display_image_size'],.gf-display-image-remove,#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt']").show();
 		jQuery(".gf-display-image-add,label[for='display_image_id']").hide();
 	} else {
 		// console.log('has placeholder');
 		jQuery("#field_" + field_id + " .ginput_container_display_image").addClass('has-placeholder').removeClass('has-image');
-		jQuery("#display_image_size,label[for='display_image_size']").hide();
-		jQuery('.gf-display-image-remove').hide();
-		jQuery("#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt']").hide();
+		jQuery("#display_image_size,label[for='display_image_size'],.gf-display-image-remove,#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt']").hide();
 		jQuery(".gf-display-image-add,label[for='display_image_id']").show();
 	}
 	
