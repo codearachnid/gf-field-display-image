@@ -10,11 +10,15 @@ function gffdi_first_time_init( path ){
 }
 jQuery(document).bind("gform_load_field_settings", function(event, field, form){
 	// console.log(field);
+	var has_image = false;
 	image_id = field["display_image_id"];
 	image_size = field["display_image_size"];
 	image_alt = field["display_image_alt"];
 	image_url = field["display_image_url"];
 	
+	has_image = ( image_id != '' && image_id > 0 ) ? true : has_image;
+	has_image = ( typeof image_url !== 'undefined' && image_url != ''  ) ? true : has_image;
+
 	if( image_size == '' ){
 		jQuery('#display_image_size').val('').hide();
 	} else {
@@ -22,8 +26,7 @@ jQuery(document).bind("gform_load_field_settings", function(event, field, form){
 	}
 	jQuery('#display_image_alt').val(image_alt);
 	jQuery("#url_image_input").val(image_url);
-	if( ( image_id != '' && image_id > 0) 
-	 || ( image_url != '' ) ){
+	if( has_image ){
 		gffdi_toggle_placeholder( true, field["id"] );
 	} else {
 		gffdi_toggle_placeholder( false, field["id"] );
@@ -73,6 +76,7 @@ jQuery(document).ready(function($){
 		
 		SetFieldProperty( 'display_image_size', image_size );
 		input_field.data('imgsize', image_size );
+		console.log(image_size);
 		
 		if( image_size == 'custom' ){
 			$('#display_image_size_custom').show();
