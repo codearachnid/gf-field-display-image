@@ -8,33 +8,42 @@ function gffdi_first_time_init( path ){
 	style.rel = 'stylesheet';
 	head.append(style);
 }
-jQuery(document).bind("gform_load_field_settings", function(event, field, form){
-	// console.log(field);
-	var has_image = false;
-	image_id = field["display_image_id"];
-	image_size = field["display_image_size"];
-	image_alt = field["display_image_alt"];
-	image_url = field["display_image_url"];
-	
-	has_image = ( image_id != '' && image_id > 0 ) ? true : has_image;
-	has_image = ( typeof image_url !== 'undefined' && image_url != ''  ) ? true : has_image;
 
-	if( image_size == '' ){
-		jQuery('#display_image_size').val('').hide();
-	} else {
-		jQuery('#display_image_size').val(image_size).show();
-	}
-	jQuery('#display_image_alt').val(image_alt);
-	jQuery("#url_image_input").val(image_url);
-	if( has_image ){
-		gffdi_toggle_placeholder( true, field["id"] );
-	} else {
-		gffdi_toggle_placeholder( false, field["id"] );
-	}
-	// console.log('gform_load_field_settings',field);
-});
 jQuery(document).ready(function($){
-	
+	$(document).bind("gform_load_field_settings", function(event, field, form){
+		// console.log(field);
+		var has_image = false;
+		image_id = field["display_image_id"];
+		image_size = field["display_image_size"];
+		image_alt = field["display_image_alt"];
+		image_url = field["display_image_url"];
+		image_dimension = field["display_image_dimension"];
+		
+		has_image = ( image_id != '' && image_id > 0 ) ? true : has_image;
+		if ( typeof image_url !== 'undefined' && image_url != ''  ){
+			has_image = true;
+			// make sure to show custom sizes
+			$('#display_image_size').val('custom').prop('disabled', 'disabled').trigger('change');
+		} else if( image_size == '' ){
+			$('#display_image_size').val('').hide();
+		} else {
+			$('#display_image_size').val(image_size).show();
+		}
+		if( image_dimension != '' ){
+			const dimensions = image_dimension.split(':');
+			$("#display_image_size_custom").show();
+			$("#display_image_size_c_width").val(dimensions[0]);
+			$("#display_image_size_c_height").val(dimensions[1]);
+		}
+		$('#display_image_alt').val(image_alt);
+		$("#url_image_input").val(image_url);
+		if( has_image ){
+			gffdi_toggle_placeholder( true, field["id"] );
+		} else {
+			gffdi_toggle_placeholder( false, field["id"] );
+		}
+		// console.log('gform_load_field_settings',field);
+	});
 	$('#display_image_alt').change(function( event ){
 		const field_id = $('#sidebar_field_label').data('fieldid');
 		const field_data = $(this).val();
@@ -50,8 +59,9 @@ jQuery(document).ready(function($){
 		
 		if( image_id > 0 ){
 			wp.media.attachment(image_id).fetch().then(function (data) {
-		  	// preloading finished
-		  	input_field.attr( 'src',wp.media.attachment(image_id).attributes.sizes[image_size].url ).show();
+				var image_size_tmp =  image_size == 'custom' ? 'full' : image_size;
+		  		// preloading finished
+		  		input_field.attr( 'src',wp.media.attachment(image_id).attributes.sizes[image_size_tmp].url ).show();
 			});
 		} else if( image_size != "custom" ){
 			const image_ratio = {
@@ -74,26 +84,33 @@ jQuery(document).ready(function($){
 			// console.log(input_field, input_field.height(), input_field.width());
 		}
 		
-		SetFieldProperty( 'display_image_size', image_size );
-		input_field.data('imgsize', image_size );
-		console.log(image_size);
-		
 		if( image_size == 'custom' ){
 			$('#display_image_size_custom').show();
 		} else {
 			$('#display_image_size_custom').hide();
 		}
+		
+		SetFieldProperty( 'display_image_size', image_size );
+		input_field.data('imgsize', image_size );
+		console.log(image_size);
+		
+
 	});
 	
 	$("#display_image_size_c_width,#display_image_size_c_height").change(function( event ){
 		console.log('changing dimensions', $(this).val(), $(this).data('type') );
 		const field_id = $('#sidebar_field_label').data('fieldid');
 		const input_field = $('#input_' + field_id );
+		var image_dimensions = '';
 		if( $(this).data('type') == 'width' ){
 			input_field.attr('width',$(this).val()).attr('height', $("#display_image_size_c_height").val());
+			image_dimensions = $(this).val()+':'+$("#display_image_size_c_height").val();
 		} else if( $(this).data('type') == 'height') {
 			input_field.attr('width',$("#display_image_size_c_width").val()).attr('height', $(this).val());
+			image_dimensions = $("#display_image_size_c_width").val()+':'+$(this).val();
 		}
+		SetFieldProperty( 'display_image_dimension', image_dimensions );
+		input_field.data('dimension', image_dimensions );
 	});
 	
 	// on upload button click
@@ -206,6 +223,7 @@ function gffdi_toggle_placeholder( has_image, field_id ){
 		// console.log('has placeholder');
 		jQuery("#field_" + field_id + " .ginput_container_display_image").addClass('has-placeholder').removeClass('has-image');
 		jQuery("#display_image_size,label[for='display_image_size'],.gf-display-image-remove,#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt'],#display_image_size_custom").hide();
+		jQuery("#display_image_size_c_width,#display_image_size_c_height").val('').trigger('change');
 		jQuery(".gf-display-image-add,label[for='display_image_id']").show();
 	}
 	jQuery("#url_image_input_wrapper").hide();

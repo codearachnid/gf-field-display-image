@@ -44,6 +44,7 @@ class Display_Image_GF_Field extends GF_Field {
 			'display_image_url',
 			'display_image_alt',
 			'display_image_size',
+			'display_image_dimension',
 			'css_class_setting',
 			'admin_label_setting',
 			'visibility_setting',
@@ -94,6 +95,17 @@ class Display_Image_GF_Field extends GF_Field {
 	
 		
 		
+		$img_width_height = '';	
+		if(!empty($this->display_image_dimension)){
+			$dimensions = explode(":", $this->display_image_dimension);
+			if(!empty($dimensions)){
+				$img_width_height = sprintf(' width="%s" height="%s" ',
+					$dimensions[0],
+					$dimensions[1]
+				);
+			}
+		}
+		
 		// set up placeholder in admin - will be leveraged if no image is set
 		if( $is_form_editor ){
 			// use the same generated placeholder as WP Image Block
@@ -105,8 +117,9 @@ class Display_Image_GF_Field extends GF_Field {
 				plugins_url( "/assets/script{$min}.js?ver=" . GFFDI_VERSION, __FILE__ ),
 				plugins_url( "/assets/", __FILE__ )
 				);
+
 			
-			return sprintf('<div class="ginput_container ginput_container_%s %s"><img %s id="%s" class="%s" alt="%s" data-imgsize="%s" data-imgid="%s" />%s%s</div>',
+			return sprintf('<div class="ginput_container ginput_container_%s %s"><img %s id="%s" class="%s" alt="%s" data-imgsize="%s" data-dimension="%s" data-imgid="%s" %s />%s%s</div>',
 				$this->type, 
 				empty($image_to_display) ? 'has-placeholder' : 'has-image',
 				!empty( $image_to_display ) ? 'src="' . $image_to_display . '"' : '',
@@ -114,18 +127,22 @@ class Display_Image_GF_Field extends GF_Field {
 				!empty( $image_to_display ) ? '' : ' hidden ',
 				$this->display_image_alt,
 				$this->display_image_size,
+				$this->display_image_dimension,
 				$this->display_image_id,
+				$img_width_height,
 				$placeholder, 
 				$load_script
 			);
 
 		} else {
 			// return the raw image on the frontend
-			return sprintf('<img %s id="%s" class="%s" alt="%s" />',
+			return sprintf('<img %s id="%s" class="%s" data-dimension="%s" alt="%s" %s />',
 				!empty( $image_to_display ) ? 'src="' . $image_to_display . '"' : '',
 				$field_id,
 				!empty( $this->display_image_id) ? '' : ' hidden ',
+				$this->display_image_dimension,
 				$this->display_image_alt,
+				$img_width_height,
 			);
 			
 		}
