@@ -41,6 +41,7 @@ class Display_Image_GF_Field extends GF_Field {
 	function get_form_editor_field_settings() {
 		return array(
 			'display_image_id',
+			'display_image_url',
 			'display_image_alt',
 			'display_image_size',
 			'css_class_setting',
@@ -82,7 +83,14 @@ class Display_Image_GF_Field extends GF_Field {
 		$form_id  = ( $is_entry_detail || $is_form_editor ) && empty( $form_id ) ? rgget( 'id' ) : $form_id;
 		
 		$image_size = !empty($this->display_image_size) ? $this->display_image_size : 'full';
-		$image_to_display = wp_get_attachment_image_src( $this->display_image_id, $image_size );
+		if( !empty($this->display_image_url) ){
+			$image_to_display = $this->display_image_url;
+		} else {
+			$image_to_display = wp_get_attachment_image_src( $this->display_image_id, $image_size );
+			if( !empty($image_to_display) ){
+				$image_to_display = $image_to_display[0];
+			}
+		}
 	
 		
 		
@@ -101,9 +109,9 @@ class Display_Image_GF_Field extends GF_Field {
 			return sprintf('<div class="ginput_container ginput_container_%s %s"><img %s id="%s" class="%s" alt="%s" data-imgsize="%s" data-imgid="%s" />%s%s</div>',
 				$this->type, 
 				empty($image_to_display) ? 'has-placeholder' : 'has-image',
-				!empty( $image_to_display ) ? 'src="' . $image_to_display[0] . '"' : '',
+				!empty( $image_to_display ) ? 'src="' . $image_to_display . '"' : '',
 				$field_id,
-				!empty( $this->display_image_id) ? '' : ' hidden ',
+				!empty( $image_to_display ) ? '' : ' hidden ',
 				$this->display_image_alt,
 				$this->display_image_size,
 				$this->display_image_id,
@@ -114,7 +122,7 @@ class Display_Image_GF_Field extends GF_Field {
 		} else {
 			// return the raw image on the frontend
 			return sprintf('<img %s id="%s" class="%s" alt="%s" />',
-				!empty( $image_to_display ) ? 'src="' . $image_to_display[0] . '"' : '',
+				!empty( $image_to_display ) ? 'src="' . $image_to_display . '"' : '',
 				$field_id,
 				!empty( $this->display_image_id) ? '' : ' hidden ',
 				$this->display_image_alt,

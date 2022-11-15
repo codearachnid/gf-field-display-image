@@ -13,13 +13,17 @@ jQuery(document).bind("gform_load_field_settings", function(event, field, form){
 	image_id = field["display_image_id"];
 	image_size = field["display_image_size"];
 	image_alt = field["display_image_alt"];
+	image_url = field["display_image_url"];
+	
 	if( image_size == '' ){
 		jQuery('#display_image_size').val('').hide();
 	} else {
 		jQuery('#display_image_size').val(image_size).show();
 	}
 	jQuery('#display_image_alt').val(image_alt);
-	if( image_id != '' && image_id > 0 ){
+	jQuery("#url_image_input").val(image_url);
+	if( ( image_id != '' && image_id > 0) 
+	 || ( image_url != '' ) ){
 		gffdi_toggle_placeholder( true, field["id"] );
 	} else {
 		gffdi_toggle_placeholder( false, field["id"] );
@@ -64,7 +68,13 @@ jQuery(document).ready(function($){
 				$('#url_image_input_wrapper').show();
 				break;
 			case 'set-url':
-				console.log("set the url",$("#url_image_input").val());
+				image_url = $("#url_image_input").val();
+				console.log("set the url",image_url);
+				// TODO add image sideload to media library
+				// https://stackoverflow.com/questions/26451022/upload-media-file-from-external-url-to-wordpress-media-library
+				SetFieldProperty('display_image_url', image_url );
+				input_field.attr( 'src', image_url ).show();
+				gffdi_toggle_placeholder( true, field_id );
 				break;
 			case 'upload':
 			case 'library':
@@ -72,7 +82,6 @@ jQuery(document).ready(function($){
 				image_size = input_field.data('imgsize');
 				
 				$('#url_image_input_wrapper').hide();
-				$("#url_image_input").val('');
 				
 				var frame = wp.media({
 					title: 'Select image', // modal window title
@@ -93,6 +102,9 @@ jQuery(document).ready(function($){
 				frame.on( 'select', function() { // it also has "open" and "close" events
 					const attachment = frame.state().get( 'selection' ).first().toJSON();
 					SetFieldProperty('display_image_id', attachment.id );
+					// clear out the image url input
+					$("#url_image_input").val('');
+					SetFieldProperty('display_image_url', '' );
 					
 					
 					input_field.data('imgid',attachment.id);
@@ -100,7 +112,7 @@ jQuery(document).ready(function($){
 					if( image_size == 'undefined' || image_size == '' ){
 						image_size = 'full';
 						SetFieldProperty( 'display_image_size', image_size );
-						jQuery('#display_image_size').val( image_size );
+						jQuery('#display_image_size').val( image_size );	
 					}
 					
 					
@@ -146,5 +158,5 @@ function gffdi_toggle_placeholder( has_image, field_id ){
 		jQuery("#display_image_size,label[for='display_image_size'],.gf-display-image-remove,#display_image_alt,label[for='display_image_alt'],p[for='display_image_alt']").hide();
 		jQuery(".gf-display-image-add,label[for='display_image_id']").show();
 	}
-	
+	jQuery("#url_image_input_wrapper").hide();
 }
