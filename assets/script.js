@@ -44,10 +44,31 @@ jQuery(document).ready(function($){
 		const input_field = $('#input_' + field_id );
 		const image_id = input_field.data('imgid');
 		const image_size = $(this).val();
-		wp.media.attachment(image_id).fetch().then(function (data) {
-		  // preloading finished
-		  input_field.attr( 'src',wp.media.attachment(image_id).attributes.sizes[image_size].url ).show();
-		});
+		
+		if( image_id > 0 ){
+			wp.media.attachment(image_id).fetch().then(function (data) {
+		  	// preloading finished
+		  	input_field.attr( 'src',wp.media.attachment(image_id).attributes.sizes[image_size].url ).show();
+			});
+		} else { // if( image_size != "full" ){
+			const image_ratio = {
+				"thumbnail": "150",
+				"medium": "300",
+				"large": "1024",
+				"full": "auto" // do not set
+			}
+			if( input_field.height() == input_field.width() ){
+				// image is square
+				input_field.attr('width',image_ratio[image_size]).attr('height', image_ratio[image_size]);
+			} else if ( input_field.height() > input_field.width() ){
+				// image is portrait
+				input_field.attr('width',image_ratio[image_size]).attr('height', 'auto');
+			} else if ( input_field.height() < input_field.width() ){
+				// image is landscape
+				input_field.attr('width','auto').attr('height', image_ratio[image_size]);
+			}
+			// console.log(input_field, input_field.height(), input_field.width());
+		}
 		
 		SetFieldProperty( 'display_image_size', image_size );
 		input_field.data('imgsize', image_size );
